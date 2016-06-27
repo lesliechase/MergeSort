@@ -3,6 +3,7 @@ set(PROJECT_NAME ms)
 project (ms)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
 add_library(ms ${PROJECT_SOURCE_DIR}/src/MergeSort.cpp)
+find_package(Threads REQUIRED)
 
 include_directories(${PROJECT_SOURCE_DIR})
 
@@ -17,5 +18,12 @@ if (enable-test)
 	add_executable(${PROJECT_TEST_NAME} ${TEST_SRC_FILES})
 	add_dependencies(${PROJECT_TEST_NAME} googletest)
 	add_dependencies(${PROJECT_TEST_NAME} ${PROJECT_NAME})
+	target_link_libraries(${PROJECT_TEST_NAME}
+			      ${GTEST_LIBS_DIR}/libgtest.a
+			      ${GTEST_LIBS_DIR}/libgtest_main.a
+			      ${PROJECT_NAME}
+			      )
+	target_link_libraries(${PROJECT_TEST_NAME} ${CMAKE_THREAD_LIBS_INIT})
+	add_test(test1 ${PROJECT_TEST_NAME} "--gtest_color=yes") 
 endif()
 
